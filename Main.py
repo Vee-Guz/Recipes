@@ -106,9 +106,6 @@ def current_recipes(recipe_list):
 
 
 
-
-
-
 if __name__ == '__main__':
     main()
 
