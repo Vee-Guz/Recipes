@@ -70,7 +70,6 @@ def read_measurements(measurements_string):
 
     for i in measurements_string:
         if i == ",":
-
             print(measurement_line.strip())
             measurement_line = ""
         else:
@@ -85,13 +84,15 @@ def read_steps(steps_string):
 
     for i in steps_string:
         if i == ",":
-            print_line = str(step_number) + ") " + steps_line
-            print(print_line.strip())
+            steps_line = str(step_number) + ") " + steps_line.strip()
+            print(steps_line)
             step_number += 1
-            print_line = ""
+            steps_line = ""
         else:
             steps_line += i
-    print(print_line.strip())
+
+    steps_line = str(step_number) + ") " + steps_line.strip()
+    print(steps_line)
 
 
 def current_recipes(recipe_list):
