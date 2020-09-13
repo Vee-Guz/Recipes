@@ -45,54 +45,61 @@ def initial_selection():
 def create_recipe(recipe_list):
     name_recipe = input("\nRecipe Name: ")
     measurements_recipe = input("List all measurements for recipe (seperate each measurement with comma): ")
+    measurements_ls = list_storing_info(measurements_recipe)
     steps_recipe = input("List steps for recipe: ")
-    recipe_python = {"name_recipe": name_recipe, "measurement_recipe": measurements_recipe, "steps_recipe": steps_recipe}
+    steps_ls = list_storing_info(steps_recipe)
+    recipe_python = {"name_recipe": name_recipe, "measurement_recipe": measurements_ls, "steps_recipe": steps_ls}
     recipe_json = json.dumps(recipe_python)
     recipe_list.append(recipe_json)
     return recipe_list
+
+
+def list_storing_info(info_string):
+    info_ls = info_string.split(",")
+    return info_ls
 
 
 def read_recipe(recipe_list, find_recipe):
     for i in range(len(recipe_list)):
         load_recipe = json.loads(recipe_list[i])
         if load_recipe["name_recipe"] == find_recipe:
-            print("\n")
-            print(load_recipe["name_recipe"])
-            print("\nMeasurements:")
-            read_measurements(load_recipe["measurement_recipe"])
-            print("\nSteps:")
-            read_steps(load_recipe["steps_recipe"])
-            return True
+            certain_step = input("Do you want a certain step from the recipe? yes/no ")
+
+            if certain_step == "no":
+                print("\n")
+                print(load_recipe["name_recipe"])
+                print("\nMeasurements:")
+                read_measurements(load_recipe["measurement_recipe"])
+                print("\nSteps:")
+                read_steps(load_recipe["steps_recipe"], 0)
+                return True
+
+            else:
+                amount_steps = len(load_recipe["measurement_recipe"]) + 1
+                step_number = int(input("There are " + str(amount_steps) + ". Which step do you want to see? "))
+                read_steps(load_recipe["steps_recipe"], step_number)
+                return True
+
+
     return False
 
-def read_measurements(measurements_string):
-    measurement_line = ""
 
-    for i in measurements_string:
-        if i == ",":
-            print(measurement_line.strip())
-            measurement_line = ""
-        else:
-            measurement_line += i
-
-    print(measurement_line.strip())
+def read_measurements(measurements_ls):
+    for measure in measurements_ls:
+        print(measure.strip())
 
 
-def read_steps(steps_string):
-    steps_line = ""
+def read_steps(steps_ls, search_step):
     step_number = 1
-
-    for i in steps_string:
-        if i == ",":
-            steps_line = str(step_number) + ") " + steps_line.strip()
-            print(steps_line)
+    if search_step != 0:
+        steps_string = str(search_step) + ")" + steps_ls[search_step - 1]
+        print(steps_string)
+    else:
+        for step in steps_ls:
+            steps_string = str(step_number) + ") " + str(step.strip())
             step_number += 1
-            steps_line = ""
-        else:
-            steps_line += i
+            print(steps_string)
 
-    steps_line = str(step_number) + ") " + steps_line.strip()
-    print(steps_line)
 
 
 def current_recipes(recipe_list):
